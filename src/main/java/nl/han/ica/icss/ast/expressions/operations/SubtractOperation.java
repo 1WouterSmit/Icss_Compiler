@@ -1,6 +1,6 @@
-package nl.han.ica.icss.ast.operations;
+package nl.han.ica.icss.ast.expressions.operations;
 
-import nl.han.ica.icss.ast.Operation;
+import nl.han.ica.icss.ast.expressions.Operation;
 
 public class SubtractOperation extends Operation {
 

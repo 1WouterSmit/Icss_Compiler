@@ -1,12 +1,13 @@
 package nl.han.ica.icss.parser;
 
 import nl.han.ica.icss.ast.*;
-import nl.han.ica.icss.ast.literals.BoolLiteral;
-import nl.han.ica.icss.ast.literals.ColorLiteral;
-import nl.han.ica.icss.ast.literals.PixelLiteral;
-import nl.han.ica.icss.ast.literals.ScalarLiteral;
-import nl.han.ica.icss.ast.operations.AddOperation;
-import nl.han.ica.icss.ast.operations.MultiplyOperation;
+import nl.han.ica.icss.ast.expressions.VariableReference;
+import nl.han.ica.icss.ast.expressions.literals.BoolLiteral;
+import nl.han.ica.icss.ast.expressions.literals.ColorLiteral;
+import nl.han.ica.icss.ast.expressions.literals.PixelLiteral;
+import nl.han.ica.icss.ast.expressions.literals.ScalarLiteral;
+import nl.han.ica.icss.ast.expressions.operations.AddOperation;
+import nl.han.ica.icss.ast.expressions.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;

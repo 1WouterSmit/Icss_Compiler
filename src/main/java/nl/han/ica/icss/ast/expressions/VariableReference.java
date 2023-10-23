@@ -1,4 +1,6 @@
-package nl.han.ica.icss.ast;
+package nl.han.ica.icss.ast.expressions;
+
+import nl.han.ica.icss.ast.Expression;
 
 import java.util.Objects;
 

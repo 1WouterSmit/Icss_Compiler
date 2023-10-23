@@ -45,5 +45,44 @@ ASSIGNMENT_OPERATOR: ':=';
 
 
 //--- PARSER: ---
-stylesheet: EOF;
+
+// Stylesheets
+stylesheet: variable_assignment* stylerule* EOF;
+
+// Variables
+variable_assignment: variable_reference ASSIGNMENT_OPERATOR expression SEMICOLON;
+variable_reference: CAPITAL_IDENT;
+
+// Stylerules
+stylerule: selector OPEN_BRACE body CLOSE_BRACE;
+body: (declaration | if_clause | variable_assignment)*;
+
+// Declarations
+declaration: property_name COLON expression SEMICOLON;
+
+// Property
+property_name: 'color' | 'width' | 'background-color' | 'height';
+
+// Expression
+expression: literal | variable_reference | expression MUL expression | expression (PLUS | MIN) expression;
+
+// Literal
+literal: boolean_literal | pixel_literal | percentage_literal | scalar_literal | color_literal;
+boolean_literal: TRUE | FALSE;
+pixel_literal: PIXELSIZE;
+percentage_literal: PERCENTAGE;
+scalar_literal: SCALAR;
+color_literal: COLOR;
+
+// Selectors
+selector: tag_selector | id_selector | class_selector;
+tag_selector: LOWER_IDENT;
+id_selector: ID_IDENT;
+class_selector: CLASS_IDENT;
+
+// If-Else
+if_clause: IF condition OPEN_BRACE body CLOSE_BRACE else_clause?;
+else_clause: ELSE OPEN_BRACE body CLOSE_BRACE;
+condition: BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE;
+
 

@@ -1,6 +1,6 @@
-package nl.han.ica.icss.ast.literals;
+package nl.han.ica.icss.ast.expressions.literals;
 
-import nl.han.ica.icss.ast.Literal;
+import nl.han.ica.icss.ast.expressions.Literal;
 import java.util.Objects;
 
 public class BoolLiteral extends Literal {
