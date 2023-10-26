@@ -6,13 +6,8 @@ import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.expressions.Literal;
 import nl.han.ica.icss.ast.expressions.Operation;
 import nl.han.ica.icss.ast.expressions.VariableReference;
-import nl.han.ica.icss.ast.expressions.literals.BoolLiteral;
-import nl.han.ica.icss.ast.expressions.literals.PercentageLiteral;
-import nl.han.ica.icss.ast.expressions.literals.PixelLiteral;
-import nl.han.ica.icss.ast.expressions.literals.ScalarLiteral;
-import nl.han.ica.icss.ast.expressions.operations.AddOperation;
-import nl.han.ica.icss.ast.expressions.operations.MultiplyOperation;
-import nl.han.ica.icss.ast.expressions.operations.SubtractOperation;
+import nl.han.ica.icss.ast.expressions.literals.*;
+import nl.han.ica.icss.ast.expressions.operations.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,7 +124,82 @@ public class Evaluator implements Transform {
         if( operation instanceof AddOperation ) return add(left, right);
         if( operation instanceof SubtractOperation ) return subtract(left, right);
         if( operation instanceof MultiplyOperation ) return multiply(left, right);
+
+        // UITBREIDING BOOLEAN OPERATORS
+        if( operation instanceof NotOperation ) return not(left);
+        if( operation instanceof EqualsOperation ) return equals(left, right);
+        if( operation instanceof GreaterOperation ) return greaterThan(left, right);
+        if( operation instanceof LesserOperation ) return lesserThan(left, right);
         return null;
+    }
+
+    // UITBREIDING EQUALS-OPERATOR
+    private BoolLiteral equals(Literal left, Literal right) {
+        boolean bool = false;
+        if(left instanceof ScalarLiteral) {
+            bool = ((ScalarLiteral) left).value == ((ScalarLiteral) right).value;
+        }
+        if(left instanceof PixelLiteral) {
+            bool = ((PixelLiteral) left).value == ((PixelLiteral) right).value;
+        }
+        if(left instanceof PercentageLiteral) {
+            bool = ((PercentageLiteral) left).value == ((PercentageLiteral) right).value;
+        }
+        if(left instanceof ColorLiteral) {
+            bool = ((ColorLiteral) left).value.equals(((ColorLiteral) right).value);
+        }
+        if(left instanceof BoolLiteral) {
+            bool = ((BoolLiteral) left).value == ((BoolLiteral) right).value;
+        }
+        return new BoolLiteral(bool);
+    }
+
+    // UITBREIDING GREATER-THAN-OPERATOR
+    private BoolLiteral greaterThan(Literal left, Literal right) {
+        boolean bool = false;
+        if(left instanceof ScalarLiteral) {
+            bool = ((ScalarLiteral) left).value > ((ScalarLiteral) right).value;
+        }
+        if(left instanceof PixelLiteral) {
+            bool = ((PixelLiteral) left).value > ((PixelLiteral) right).value;
+        }
+        if(left instanceof PercentageLiteral) {
+            bool = ((PercentageLiteral) left).value > ((PercentageLiteral) right).value;
+        }
+        if(left instanceof ColorLiteral) {
+            bool = ((ColorLiteral) left).value.compareTo( ((ColorLiteral) right).value ) > 0;
+        }
+        if(left instanceof BoolLiteral) {
+            return null;
+        }
+        return new BoolLiteral(bool);
+    }
+
+    // UITBREIDING LESSER-THAN-OPERATOR
+    private BoolLiteral lesserThan(Literal left, Literal right) {
+        boolean bool = false;
+        if(left instanceof ScalarLiteral) {
+            bool = ((ScalarLiteral) left).value < ((ScalarLiteral) right).value;
+        }
+        if(left instanceof PixelLiteral) {
+            bool = ((PixelLiteral) left).value < ((PixelLiteral) right).value;
+        }
+        if(left instanceof PercentageLiteral) {
+            bool = ((PercentageLiteral) left).value < ((PercentageLiteral) right).value;
+        }
+        if(left instanceof ColorLiteral) {
+            bool = ((ColorLiteral) left).value.compareTo( ((ColorLiteral) right).value ) < 0;
+        }
+        if(left instanceof BoolLiteral) {
+            return null;
+        }
+        return new BoolLiteral(bool);
+    }
+
+    // UITBREIDING NOT-OPERATOR
+    private BoolLiteral not(Literal value) {
+        boolean bool = !((BoolLiteral) value).value;
+        return new BoolLiteral(bool);
     }
 
     // TR01

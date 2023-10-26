@@ -6,9 +6,7 @@ import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.expressions.*;
 import nl.han.ica.icss.ast.expressions.literals.*;
-import nl.han.ica.icss.ast.expressions.operations.AddOperation;
-import nl.han.ica.icss.ast.expressions.operations.MultiplyOperation;
-import nl.han.ica.icss.ast.expressions.operations.SubtractOperation;
+import nl.han.ica.icss.ast.expressions.operations.*;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;
@@ -159,7 +157,7 @@ public class ASTListener extends ICSSBaseListener {
 		// Expression is an operation
 		ASTNode operation;
 		if( childCount == 3 ) {
-			switch(ctx.getChild(1).getText()) {
+			switch (ctx.getChild(1).getText()) {
 				case "*":
 					operation = new MultiplyOperation();
 					break;
@@ -169,16 +167,30 @@ public class ASTListener extends ICSSBaseListener {
 				case "-":
 					operation = new SubtractOperation();
 					break;
+				// UITBREIDING_OPERATORS
+				case "==":
+					operation = new EqualsOperation();
+					break;
+				case ">":
+					operation = new GreaterOperation();
+					break;
+				case "<":
+					operation = new LesserOperation();
+					break;
 				default:
 					return;
 			}
+			currentContainer.push(operation);
+		} // UITBREIDING: Expression is a Not-operation
+		else if( childCount == 2 && ctx.getChild(0).getText().equals("!")) {
+			operation = new NotOperation();
 			currentContainer.push(operation);
 		}
 	}
 
 	@Override
 	public void exitExpression(ICSSParser.ExpressionContext ctx) {
-		if( ctx.getChildCount() == 3) {
+		if( ctx.getChildCount() == 3 || ctx.getChildCount() == 2) {
 			ASTNode operation = currentContainer.pop();
 			currentContainer.peek().addChild(operation);
 		}

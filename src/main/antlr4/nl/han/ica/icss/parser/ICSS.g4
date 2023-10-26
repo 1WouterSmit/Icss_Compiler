@@ -40,7 +40,10 @@ PLUS: '+';
 MIN: '-';
 MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
-
+EQUALS_OPERATOR: '==';
+GREATER_OPERATOR: '>';
+LESSER_OPERATOR: '<';
+NOT_OPERATOR: '!';
 
 
 
@@ -64,7 +67,9 @@ declaration: property_name COLON expression SEMICOLON;
 property_name: 'color' | 'width' | 'background-color' | 'height';
 
 // Expression
-expression: literal | variable_reference | expression MUL expression | expression (PLUS | MIN) expression;
+expression: literal | variable_reference | expression MUL expression | expression (PLUS | MIN) expression |
+    NOT_OPERATOR expression | expression EQUALS_OPERATOR expression | expression LESSER_OPERATOR expression |
+    expression GREATER_OPERATOR expression;
 
 // Literal
 literal: boolean_literal | pixel_literal | percentage_literal | scalar_literal | color_literal;

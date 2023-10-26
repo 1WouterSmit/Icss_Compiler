@@ -6,9 +6,7 @@ import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.expressions.Operation;
 import nl.han.ica.icss.ast.expressions.VariableReference;
 import nl.han.ica.icss.ast.expressions.literals.*;
-import nl.han.ica.icss.ast.expressions.operations.AddOperation;
-import nl.han.ica.icss.ast.expressions.operations.MultiplyOperation;
-import nl.han.ica.icss.ast.expressions.operations.SubtractOperation;
+import nl.han.ica.icss.ast.expressions.operations.*;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.HashMap;
@@ -79,11 +77,39 @@ public class Checker {
     // CH03 - If either child of the operation is a color literal, set error on the node.
     private void checkOperation(Operation operation) {
         ExpressionType leftType = getExpressionType(operation.lhs);
-        ExpressionType rightType = getExpressionType(operation.rhs);
+        ExpressionType rightType;
+
+        // UITBREIDING NOT-OPERATOR
+        // A NotOperation only has the lhs operand. Getting the type of a null value generates an error.
+        if( operation instanceof NotOperation) {
+            if( leftType != ExpressionType.BOOL) {
+                operation.setError("Not-operation operand must be of type BoolLiteral");
+            }
+            return;
+        }
+        rightType = getExpressionType(operation.rhs);
+
+        // UITBREIDING EQUALS-OPERATOR
+        if( operation instanceof EqualsOperation) {
+            if( leftType != rightType) {
+                operation.setError("Logical operations require operands of the same type.");
+                return;
+            }
+            return;
+        }
+
+        // UITBREIDING GREATER-THAN-/LESSER-THAN-OPERATOR
+        if( operation instanceof LesserOperation || operation instanceof GreaterOperation) {
+            if( leftType == ExpressionType.BOOL) {
+                operation.setError("lesser-than or greater-than operations cannot be made on boolean values.");
+            } else if( leftType != rightType ) {
+                operation.setError("Logical operations require operands of the same type.");
+            }
+            return;
+        }
 
         if(leftType == ExpressionType.COLOR || rightType == ExpressionType.COLOR) {
             operation.setError("Operations cannot be made on literals of type Color");
-            //return ExpressionType.UNDEFINED;
         }
     }
 
@@ -124,7 +150,19 @@ public class Checker {
         // If operation, recursively get type
         if( expression instanceof Operation ) {
             ExpressionType leftType = getExpressionType(((Operation) expression).lhs);
-            ExpressionType rightType = getExpressionType(((Operation) expression).rhs);
+            ExpressionType rightType;
+
+            // UITBREIDING NOT-OPERATOR
+            // A NotOperation only has 1 operand, on the left hand side.
+            // Getting the expressionType of null gives an error.
+            if( expression instanceof NotOperation ) return ExpressionType.BOOL;
+            rightType= getExpressionType(((Operation) expression).rhs);
+
+            // UITBREIDING EQUALS-/GREATER-THAN-/LESSER-THAN-OPERATOR
+            if( expression instanceof EqualsOperation || expression instanceof GreaterOperation ||
+                    expression instanceof LesserOperation ) {
+                return ExpressionType.BOOL;
+            }
 
             if( expression instanceof AddOperation || expression instanceof SubtractOperation ) {
                 // valid types for operation
