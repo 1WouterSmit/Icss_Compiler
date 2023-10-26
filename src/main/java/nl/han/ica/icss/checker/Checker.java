@@ -62,10 +62,10 @@ public class Checker {
         for(int i=0; i<variableTypes.getSize(); i++) {
             if( variableTypes.get(i).containsKey(variableName) ) {
                 variableExpressionType = variableTypes.get(i).get(variableName);
-                System.out.println("variable found in scope "+i);
             }
         }
 
+        // CH01
         if( variableExpressionType == null ) {
             reference.setError("Variable name "+variableName+" not found in scope.");
         }
@@ -150,9 +150,7 @@ public class Checker {
 
         // If variable reference, look up type
         if( expression instanceof VariableReference ) {
-            System.out.println("VAR_REF");
             ExpressionType variableType = checkVariableScopes((VariableReference) expression);
-            System.out.println("VAR_TYPE: "+variableType.toString());
             if(variableType == null) variableType = ExpressionType.UNDEFINED;
             return variableType;
         }
